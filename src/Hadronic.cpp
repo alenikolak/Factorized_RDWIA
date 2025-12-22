@@ -151,10 +151,10 @@ int cosdep_Responses(double w, double q, S_level *S, FormFactors *FF)
 		//'B' factors, i.e. cos(\phi) dependence
 		cout << real(Hadron[0][1]) << "  " <<  real(Hadron[1][3]) << "   " << imag(Hadron[0][2]) << "   " << imag(Hadron[2][3]) << "   ";
 
-		//C factors: cos(2\pi)
+		//C factor: cos(2\pi)
 		cout << abs(Hadron[1][1]) - abs(Hadron[2][2]) << "   ";
 
-		//D factors : sin(\phi)
+		//D factor : sin(\phi)
 		cout << real(Hadron[0][2]) << "   " << real(Hadron[2][3]) << "   " << imag(Hadron[0][1]) << "   " << imag(Hadron[1][3]) << "   ";
 
 		//E factor, sin(2\phi)
@@ -213,7 +213,7 @@ int Inclusive_Responses(double w, double q, S_level *S, FormFactors *FF, double 
 		R_CL += real(Hadron[0][3])*Jac;
 		R_LL += abs(Hadron[3][3])*Jac;
 		R_T += abs(Hadron[1][1] + Hadron[2][2])*Jac;
-		R_Tp += imag(Hadron[2][3])*Jac;
+		R_Tp += imag(Hadron[1][2])*Jac;
 	}
 
 	Responses[0] = R_CC*step;
@@ -283,7 +283,7 @@ int Inclusive_Responses_th(double w, double q, S_level *S, FormFactors *FF, doub
 		R_CL += real(Hadron[0][3])*Jac;
 		R_LL += abs(Hadron[3][3])*Jac;
 		R_T += abs(Hadron[1][1] + Hadron[2][2])*Jac;
-		R_Tp += imag(Hadron[2][3])*Jac;
+		R_Tp += imag(Hadron[1][2])*Jac;
 	}
 
 	Responses[0] = PF*R_CC;
