@@ -17,8 +17,9 @@ The nucleon knockout cross section is factorized into three pieces
 3. The lepton tensor stored in `struct LeptonTensor` and dealt with in `Leptonic.cpp`
 
 The overlap matrices and nucleon form factors are combined to yield the hadron tensor as implemented in `Hadronic.cpp`.
-The hadron and lepton tensor are contracted to yield the nucleon knockout cross sections as implemented in `Crosssections.cpp`
-The function double `cross_section(double E_i, double E_f, double costheta_f, double pm, double phi_N, LeptonTensor *Lep, FormFactors *FF, S_level *S)` serves mostly as an illustration. In practice one makes use of the fact that the dependence on azimuth angle factorizes to only compute the relevant terms.
+The hadron and lepton tensor are contracted to yield the nucleon knockout cross sections as implemented in `Crosssections.cpp`.
+
+The function `double cross_section(double E_i, double E_f, double costheta_f, double pm, double phi_N, LeptonTensor *Lep, FormFactors *FF, S_level *S)` serves mostly as an illustration. In practice one makes use of the fact that the dependence on azimuth angle factorizes to only compute the relevant terms.
 
 ## Running the code
 
