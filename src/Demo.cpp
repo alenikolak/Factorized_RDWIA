@@ -45,12 +45,19 @@ int main(int argc, char* argv[])
 	P_high.read_S("./Overlaps/EDRMF/C12/highTS_lev2_N1");
 
 
+	double w = 100.;
+	double q = 380.;
+
+	cosdep_Responses(w,q, &S_high, &FF);
+
+
+	return 0;
 	//The reading takes most of the time
 
 	//The functions 'cross_section' in Crosssections.cpp give the exclusive cross section, but they are not so usefull usually
 
 	//Let's instead do the inclusive response
-	double q=380.;
+	q=380.;
 	for (double w = 0 ; w < q ; w+=1)
 	{
 		double Responses_S1[5];
@@ -89,6 +96,7 @@ int main(int argc, char* argv[])
 	LeptonTensor Lep;
 	
 	Lep.set_elec(); // This sets the masses to electronmass, helicity to 0 and the correct prefactor
+
 
 	//To compare with other calculations, we ignore nuclear recoil. 
 	//Easily done by making Mass of residual system very big
