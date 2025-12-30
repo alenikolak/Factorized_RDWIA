@@ -71,6 +71,82 @@ double cross_section(double E_i, double E_f, double costheta_f, double pm, doubl
 	return Lep->FF*PS*LepHad; //dsigma/ dEl d\Omega_l d\Omega_N;
 }
 
+int Get_ABCDE(double E_i, double E_f, double costheta_f, double pm, LeptonTensor *Lep, FormFactors *FF, S_level *S, double ABCDE[5])
+{
+	for ( int i = 0 ; i < 5 ; i++)
+	{
+		ABCDE[i] = 0.;
+	}
+
+	//The rest is identical to cross section, could restructure this but no time
+	
+	//Evaluate lepton tensor and leptonic prefactors along with w, q , Q2, and the momenta ki, kf
+	int ERR = Lep->eval_minim(E_i, E_f, costheta_f);
+
+	if (ERR != 0){ return -1;} //Invalid lepton kinematics, cross section is zero
+
+	//Momentum transfer:
+	double q = Lep->q; 
+
+	//The outgoing nucleon kinetic energy
+	double TN = E_i - E_f  - S->E_kappa - pm*pm/(2.*S->MB);
+
+	if (TN < 0){return -1;} 
+
+	double kN2 = TN*(TN+2.*MN);
+	double kN = sqrt(kN2);
+	//Angle between pm and k_N
+	double cos_pk = (q*q - kN2 - pm*pm)/(-2.*kN*q);
+
+	//Get Hadron tensor elements, in q ~ z system with phi = 0
+	complex<double> H[4][4]; //Overkill, could just define symmetric and antisymmetric
+	ERR = Get_Hadron(TN, pm, cos_pk, S, FF, H);
+
+	if (ERR != 0){return -1;} //Hadron kinematics outside table range or otherwise invalid
+
+	//The cross section then factorizes into factors A,B,C,D,E:
+	
+	//Symmetric contributions first
+	double A = Lep->L_s[0][0] * abs(H[0][0]) + 2.*Lep->L_s[0][3] * real(H[0][3]) + Lep->L_s[3][3] * abs(H[3][3]); //L
+	A += (Lep->L_s[1][1] + Lep->L_s[2][2])/2. * abs( H[1][1] + H[2][2]); //T
+
+	double B = 2.*( Lep->L_s[0][1] * real(H[0][1]) + Lep->L_s[1][3] * real(H[1][3]));
+
+	double C = (Lep->L_s[1][1] - Lep->L_s[2][2])/2. * abs( H[1][1] - H[2][2]);
+
+	double D = -2.*( Lep->L_s[0][1] * real(H[0][2]) + Lep->L_s[1][3] * real(H[2][3]));
+
+	double E = (Lep->L_s[2][2] - Lep->L_s[1][1])*real(H[1][2]);
+
+	//Antisymmetric terms
+	double h = Lep->helicity;
+	if (h != 0){
+		A += -2*h*Lep->L_a[1][2] * imag(H[1][2]);
+
+		B += -2.*h*( Lep->L_a[0][2] * imag(H[0][2])  + Lep->L_a[2][3] * imag(H[2][3]) );
+
+		D += -2.*h*( Lep->L_a[0][2] * imag(H[0][1])  + Lep->L_a[2][3] * imag(H[1][3]) );
+	}
+
+	//Phase space factors and coupling
+	double cos_qn = (kN - pm*cos_pk)/q; //nucleon angle with respect to q
+	//Recoil factor
+	double frec = abs( 1. +  (TN+MN)/S->MB *(1. - q/kN*cos_qn));
+	
+	double PS = (kN*(TN+MN))/frec/pow(2.*Pi, 5); //Not including MB/E_B ~ 1
+	PS = PS * Lep->kf/E_i;
+
+	ABCDE[0] = Lep->FF*PS*A; 
+	ABCDE[1] = Lep->FF*PS*B; 
+	ABCDE[2] = Lep->FF*PS*C; 
+	ABCDE[3] = Lep->FF*PS*D; 
+	ABCDE[4] = Lep->FF*PS*E; 
+
+	return 0;
+
+
+}
+
 
 //Evaluates the differential cross sections ds/dE_d\Omega_l d\Omega_N
 //uses as input \cos\theta_N, the scattering angle of the nucleon with respect to momentum transfer q.

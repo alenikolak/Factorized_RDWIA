@@ -9,6 +9,8 @@
 //uses as input missing momentum pm instead of nucleon scattering angle
 double cross_section(double E_i, double E_f, double costheta_f, double pm, double phi_N, LeptonTensor *Lep, FormFactors *FF, S_level *S);
 
+//Gives the functions ABCDE to factorize the angular dependence
+int Get_ABCDE(double E_i, double E_f, double costheta_f, double pm, LeptonTensor *Lep, FormFactors *FF, S_level *S, double ABCDE[5]); 
 
 //Evaluates the differential cross sections ds/dE_d\Omega_l d\Omega_N
 //uses as input \cos\theta_N, the scattering angle of the nucleon with respect to momentum transfer q.
