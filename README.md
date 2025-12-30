@@ -25,7 +25,7 @@ The function `double cross_section(double E_i, double E_f, double costheta_f, do
 
 The code can simply be compiled using the `compile.sh` script. 
 
-Running `bash compilse.sh` produces two executables:
+Running `bash compile.sh` produces two executables:
 1. `demo` which reads overlap matrices for the 1s shell in carbon and produces some cross sections.
 
 2. `output_benchmarks` which prints certain response functions to standard output, used for confirming that everything is correct.
@@ -88,3 +88,4 @@ and
     year = "1993"
 }
 ```
+
